@@ -36,6 +36,9 @@ bld/
 !*.H
 !*.c
 !*.txt
+!*.adoc
+!*.config
+!*.conf
 
 !*.gitignore
 !*.gitattributes
