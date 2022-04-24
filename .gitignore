@@ -39,6 +39,7 @@ bld/
 !*.adoc
 !*.config
 !*.conf
+!*.in
 
 !*.gitignore
 !*.gitattributes
