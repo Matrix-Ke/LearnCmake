@@ -41,6 +41,14 @@ target_include_directories(MatrixTutorial PUBLIC
     # "${EXTRA_INCLUDES}"
 )
 
+include(InstallRequiredSystemLibraries)
+set(cpack_source_file_license "${CMAKE_CURRENT_SOURCE_DIR}/License.txt" )
+set(cpack_pacage_version__major "${Tutorial_VERSION_MAJOR}")
+set(cpack_package_version_minor "${Tutorial_VERSION_MINOR}")
+#The CPACK_SOURCE_GENERATOR variable selects a file format for the source package
+set(CPACK_SOURCE_GENERATOR  "TGZ")
+include(CPack)
+
 
 
 #=================================安装程序=================================
@@ -52,7 +60,7 @@ install(FILES "${PROJECT_BINARY_DIR}/TutorialConfig.h" DESTINATION include)
 
 
 #=================================开启测试程序=============================
-enable_testing()
+# enable_testing()
 #todo list 
 
 
