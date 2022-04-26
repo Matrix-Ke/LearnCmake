@@ -479,8 +479,20 @@ target_link_libraries(<target>
   )
   ```
 
-- config
+- include
+```
+  include(<file|module> [OPTIONAL] [RESULT_VARIABLE <VAR>] [NO_POLICY_SCOPE])
+```
+  - include指令用来载入并运行来自于文件或模块的CMake代码
 
+- option
+  ```
+  option(<variable> "<help_text>" [value])
+  ```
+  - cmake中option起到编译开关的作用，CMakeLists.txt中option以前的语句，变量按未定义处理，option之后的语句，变量才被定义。另外，注意，option命令定义的变量不影响c或c++源码中#ifdef或者#ifndef逻辑判断，具体见案例代码。
+
+
+- config
   ```cmake
   include(CMakePackageConfigHelpers)
   
