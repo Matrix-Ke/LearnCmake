@@ -1,5 +1,7 @@
 # 基础知识
-
+## CMake理解
+* cmake是构建系统生成器，主要功能是描述项目结构，表达模块依赖， 从而项目友好的方式表达构建过程
+* Cmake 围绕构建目标声明，一切围绕着target
 ### 开头
 
 ```cmake
@@ -48,6 +50,12 @@ set(<variable-name> <value>... CACHE <type> <docstring> [FORCE])
   set(var A)
   message(STATUS "${A_${var}}") # aa
   ```
+
+- [unset](https://cmake.org/cmake/help/latest/command/unset.html)
+  ```
+  unset(<variable> [CACHE | PARENT_SCOPE])
+  ```
+  - 
 
 ### 类型
 
@@ -452,7 +460,6 @@ target_link_libraries(<target>
   - exe: `set_target_properties(<target> PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})` 
 
 - install
-
   ```cmake
   install(<FILES|PROGRAMS> files...
         TYPE <type> | DESTINATION <dir>
@@ -471,8 +478,13 @@ target_link_libraries(<target>
   ```
   - FILES|PROGRAMS若为相对路径给出的文件名，将相对于当前源目录进行解释。其中，FILES为普通的文本文件，PROGRAMS指的是非目标文件的可执行程序(如脚本文件)
   
+- find_package
+  ```
+  find_package(<PackageName> [version] [REQUIRED] [[COMPONENTS] [components...]])
+  ```
+  - 后面都是可选项，最基础的使用形式就是 find_package 加一个 PackageName 信息。CMake 会在约定路径和通过选项指定的路径下搜索名为 FindPackageName.cmake 的文件，并执行其中的逻辑以设置一些关键的变量。约定的 PackageName_FOUND 标识是否找到对应的依赖以进行差别处理逻辑，其他的变量则根据不同 FindPackageName.cmake 的策略有所不同，通常包括该依赖暴露的头文件信息，可供链接的库的信息，以及库的构建目标等等，并可能按照模块进行划分以获得更细粒度的导出控制。
+  
 - install export
-
   ```cmake
   install(EXPORT "${PROJECT_NAME}Targets"
     NAMESPACE <namespace>
