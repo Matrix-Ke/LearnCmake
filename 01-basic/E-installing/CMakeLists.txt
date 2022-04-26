@@ -51,3 +51,22 @@ install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/
 # Config
 install (FILES cmake-examples.conf
     DESTINATION etc)
+
+
+# message(STATUS CMAKE_BINARY_DIR = ${CMAKE_BINARY_DIR})
+
+
+# add_library(testLib  SHARED  ./src/Hello.cpp)
+
+# target_include_directories(testLib  PUBLIC   ${CMAKE_SOURCE_DIR}/include)
+
+
+# add_executable(mainExec  src/main.cpp)
+
+# target_link_libraries(mainExec  PRIVATE testLib)
+
+
+# install(TARGETS mainExec testLib
+#     LIBRARY DESTINATION ${CMAKE_BINARY_DIR}
+#     RUNTIME DESTINATION ${CMAKE_BINARY_DIR}
+# )
