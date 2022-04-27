@@ -512,10 +512,22 @@ eg: add_custom_command(
   )
   ```
 
+- add_test
+  ```
+  add_test(NAME <name> COMMAND <command> [<arg>...]
+         [CONFIGURATIONS <config>...]
+         [WORKING_DIRECTORY <dir>]
+         [COMMAND_EXPAND_LISTS])
+  eg: add_test(NAME mytest
+         COMMAND testDriver --config $<CONFIG>
+                            --exe $<TARGET_FILE:myexe>)
+  ```
+  - 
+
 - include
-```
-  include(<file|module> [OPTIONAL] [RESULT_VARIABLE <VAR>] [NO_POLICY_SCOPE])
-```
+  ```
+    include(<file|module> [OPTIONAL] [RESULT_VARIABLE <VAR>] [NO_POLICY_SCOPE])
+  ```
   - include指令用来载入并运行来自于文件或模块的CMake代码
 
 - option
