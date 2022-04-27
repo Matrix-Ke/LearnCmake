@@ -6,18 +6,11 @@ project(MatrixTutorial VERSION 1.0.0 )
 set(CMAKE_CXX_STANDARD  11)
 set(CMAKE_CXX_STANDARD_REQUIRED TRUE)
 
-
-option(USE_MYMATH "Use tutorial provided math implementation" ON)
-
-# configure a header file to pass some of the CMake settings
-# to the source code
-configure_file(TutorialConfig.h.in TutorialConfig.h)
-
 #默认config结果保存到build文件夹中，默认TutorialConfig.h将生成到PROJECT_BINARY_DIR文件夹中
 message(STATUS configPath= ${${PROJECT_BINARY_DIR}})
 configure_file(TutorialConfig.h.in  TutorialConfig.h)
 
-
+option(USE_MYMATH "Use tutorial provided math implementation" ON)
 if(USE_MYMATH)
 #添加子文件夹
     add_subdirectory(MathFunctions)
