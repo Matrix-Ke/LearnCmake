@@ -382,6 +382,30 @@ eg: add_custom_command(
   DEPENDS MakeTable
   )
 ```
+
+- [add_custom_target](cmake.org/cmake/help/latest/command/add_custom_target.html)
+  ```
+  add_custom_target(Name [ALL] [command1 [args1...]]
+                  [COMMAND command2 [args2...] ...]
+                  [DEPENDS depend depend depend ... ]
+                  [BYPRODUCTS [files...]]
+                  [WORKING_DIRECTORY dir]
+                  [COMMENT comment]
+                  [JOB_POOL job_pool]
+                  [VERBATIM] [USES_TERMINAL]
+                  [COMMAND_EXPAND_LISTS]
+                  [SOURCES src1 [src2...]])
+  eg: add_custom_target(CopyTask
+                  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/config ${CMAKE_CURRENT_SOURCE_DIR}/etc
+  )
+  ```
+  - ${CMAKE_COMMAND}是CMake的路径，-E使CMake运行命令而不是构建
+  - ALL：表明该目标会被添加到默认的构建目标，使得它每次都被运行；
+    - COMMAND：指定要在构建时执行的命令行；
+    - DEPENDS：指定命令所依赖的文件；
+    - COMMENT：在构建时执行命令之前显示给定消息；
+    - WORKING_DIRECTORY：使用给定的当前工作目录执行命令。如果它是相对路径，它将相对于对应于当前源目录的构建树目录；
+    - BYPRODUCTS：指定命令预期产生的文件。
 ### file
 
 - Reading
