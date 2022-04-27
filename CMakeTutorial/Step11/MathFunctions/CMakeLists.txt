@@ -1,10 +1,14 @@
 add_library(MathFunctions MathFunctions.cpp)
+# 将版本编号添加到MathFunctions库中
+set_property(TARGET MathFunctions PROPERTY VERSION "1.0.0")
+set_property(TARGET MathFunctions PROPERTY SOVERSION "1")
 
 #interface： 暴露给外部需要使用这个库以这个头文件，但是该库cpp自身是不需要的额外inlcude的
 target_include_directories(MathFunctions
           INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
 )
 target_link_libraries(MathFunctions PUBLIC tutorial_compiler_flags)
+
 
 option(USE_MYMATH "use tutorial provide math function" ON)
 if(USE_MYMATH)
@@ -42,15 +46,14 @@ target_compile_definitions(MathFunctions PRIVATE "EXPORTING_MYMATH")
 
 #========================================安装指令====================================
 #执行安装程序， 将外部库和程序安装到指定位置
-# install rules
-set(installable_libs MathFunctions)
+set(installable_libs MathFunctions tutorial_compiler_flags)
 if(TARGET SqrtLibrary)
   list(APPEND installable_libs SqrtLibrary)
 endif()
-install(TARGETS ${installable_libs} DESTINATION lib)
+install(TARGETS ${installable_libs}
+        EXPORT MathFunctionsTargets
+        DESTINATION lib)
 install(FILES MathFunctions.h DESTINATION include)
-
-
 
 
 
