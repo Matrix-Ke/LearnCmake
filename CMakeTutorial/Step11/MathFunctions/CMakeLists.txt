@@ -1,15 +1,22 @@
+#==========================================库目标生成=================================
 add_library(MathFunctions MathFunctions.cpp)
-# 将版本编号添加到MathFunctions库中
-set_property(TARGET MathFunctions PROPERTY VERSION "1.0.0")
+set_property(TARGET MathFunctions PROPERTY VERSION "1.0.0") # 将版本编号添加到MathFunctions库中
 set_property(TARGET MathFunctions PROPERTY SOVERSION "1")
-
-#interface： 暴露给外部需要使用这个库以这个头文件，但是该库cpp自身是不需要的额外inlcude的
+# interface 含义： 暴露给外部需要使用这个库以这个头文件，但是该库cpp自身是不需要的额外inlcude的
 target_include_directories(MathFunctions
-          INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
-)
+                            INTERFACE 
+                            # ${CMAKE_CURRENT_SOURCE_DIR}  我也不知道为啥要改成这样，但是就是改成这样才能运行cmake。
+                            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+                            $<INSTALL_INTERFACE:include>
+                           )
+
+
+#==========================================生成器表达式 Debug===================================== 
+file(GENERATE OUTPUT "./generator_test.txt" CONTENT "$<IF:0,${CMAKE_CURRENT_BINARY_DIR}, ${CMAKE_CURRENT_SOURCE_DIR}>\n")
+
+
+#对库目标的依赖库，宏定义，库属性进行设置
 target_link_libraries(MathFunctions PUBLIC tutorial_compiler_flags)
-
-
 option(USE_MYMATH "use tutorial provide math function" ON)
 if(USE_MYMATH)
     target_compile_definitions(MathFunctions PRIVATE "USE_MYMATH")
@@ -37,10 +44,9 @@ if(USE_MYMATH)
     message(STATUS BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS})
     target_link_libraries(MathFunctions PRIVATE SqrtLibrary)
 endif()
-
-# define the symbol stating we are using the declspec(dllexport) when
-# building on windows
+# define the symbol stating we are using the declspec(dllexport) when building on windows
 target_compile_definitions(MathFunctions PRIVATE "EXPORTING_MYMATH")
+
 
 
 

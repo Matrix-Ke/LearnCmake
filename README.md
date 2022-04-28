@@ -1,4 +1,7 @@
 # 基础知识
+
+## cmake使用方式
+* 当使用者将你的库作为第三方库来使用的时候，CMAKE_SOURCE_DIR 以及 CMAKE_BINARY_DIR 就会变成使用者所在项目的变量了。那么，在你的库中，CMake 获取的 CMAKE_SOURCE_DIR 就会是 project-root，而不是你可能想要的 project-root/extern/your-lib-root CMAKE_BINARY_DIR 同理。因此，正确的做法是使用 PROJECT_SOURCE_DIR 以及 PROJECT_BINARY_DIR，他们的获取是 CMake 根据遇到的最近的 project() 命令来决定的。
 ## CMake理解
 * cmake是构建系统生成器，主要功能是描述项目结构，表达模块依赖， 从而项目友好的方式表达构建过程
 * Cmake 围绕构建目标声明，一切围绕着target
@@ -473,37 +476,13 @@ eg: add_custom_command(
     - `STATUS <variable>`：状态为两个值的 list，前者为 0 时表示无错
     - `EXPECTED_HASH <HASH>=<value>`：哈希值
 
-### package
-
-- `<namespace>`，e.g. `Ubpa` 
-
-- `<package_name>` 
-
-  - e.g. `${PROJECT_NAME}_${PROJECT_VERSION_MAJOR}_${PROJECT_VERSION_MINOR}_${PROJECT_VERSION_PATCH}` 
-
-- target name：`${PROJECT_NAME}_${relative_path}`，其中 `/` 要转成 `_` 
-
-  - `string(REPLACE "/" "_" targetName "${PROJECT_NAME}_${relative_path}")` 
-
-- bin, dll, lib path
-
-  ```cmake
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin")
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/bin")
-  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/bin")
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib")
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/lib")
-  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/lib")
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib")
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/lib")
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/lib")
-  ```
-
-- debug postfix
-
-  - dll, lib: `set(CMAKE_DEBUG_POSTFIX d)` 
-  - exe: `set_target_properties(<target> PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})` 
-
+### [CMake系列安装，打包，导出](blog.xizhibei.me/2020/04/20/cmake-5-install-package-and-export/)
+* 使用第三方库的三种方式：
+  1. 安装子文件夹(和工程一起编译，调试)
+  2. 安装编译产物
+  3. 导出编译目录
+* 安装编译产物： Cmake为此提供了完善的支持，主要是: a安装,b导出,c打包
+* 导出编译目录: 这种方式不需要第三方库作为子文件夹放在使用者的项目中，它只需要导出编译目录，然后将 target 导出到 $HOME/.cmake/packages 供使用
 - install
   ```cmake
   install(<FILES|PROGRAMS> files...
@@ -522,19 +501,48 @@ eg: add_custom_command(
   install(FILES "${PROJECT_SOURCE_DIR}/include" DESTINATION "${package_name}/include")
   ```
   - FILES|PROGRAMS若为相对路径给出的文件名，将相对于当前源目录进行解释。其中，FILES为普通的文本文件，PROGRAMS指的是非目标文件的可执行程序(如脚本文件)
+  - TARGETS：安装编译后的产物 target：library 以及 executable 都可以作为参数；
+  - FILES：安装其它文件，比如配置文件；
+  - PROGRAMS：安装可执行文件，脚本之类的，与 FILES 一样，区别在于可执行权限；
+  - DIRECTORY：安装整个目录，比如文档目录，另外，你可以利用 FILES_MATCHING PATTERN "*.h" 参数来安装库所需要的头文件；
+  - CODE 与 SCRIPT：这两样属于高级模式了，你可以通过它们来实现自定义安装；
   
+- export()
+  - export() Export targets from the build tree for use by outside projects(从构建树导出目标提供给外部工程使用)，，其实就是为了支持find_package(), 
+  - find_package() 需要包的mylibconfig.cmake以及版本查找mylibconfigVersion.cmake文件
+
+- package
+- `<namespace>` 
+- `<package_name>` 
+  - e.g. `${PROJECT_NAME}_${PROJECT_VERSION_MAJOR}_${PROJECT_VERSION_MINOR}_${PROJECT_VERSION_PATCH}` 
+- target name：`${PROJECT_NAME}_${relative_path}`，其中 `/` 要转成 `_` 
+  - `string(REPLACE "/" "_" targetName "${PROJECT_NAME}_${relative_path}")` 
+
+- bin, dll, lib path
+  ```cmake
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/bin")
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/bin")
+  set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/bin")
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib")
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/lib")
+  set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/lib")
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_SOURCE_DIR}/lib")
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_DEBUG "${PROJECT_SOURCE_DIR}/lib")
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE "${PROJECT_SOURCE_DIR}/lib")
+  ```
+
+
+- debug postfix
+
+  - dll, lib: `set(CMAKE_DEBUG_POSTFIX d)` 
+  - exe: `set_target_properties(<target> PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})` 
+
 - find_package
   ```
   find_package(<PackageName> [version] [REQUIRED] [[COMPONENTS] [components...]])
   ```
   - 后面都是可选项，最基础的使用形式就是 find_package 加一个 PackageName 信息。CMake 会在约定路径和通过选项指定的路径下搜索名为 FindPackageName.cmake 的文件，并执行其中的逻辑以设置一些关键的变量。约定的 PackageName_FOUND 标识是否找到对应的依赖以进行差别处理逻辑，其他的变量则根据不同 FindPackageName.cmake 的策略有所不同，通常包括该依赖暴露的头文件信息，可供链接的库的信息，以及库的构建目标等等，并可能按照模块进行划分以获得更细粒度的导出控制。
   
-- install export
-  ```cmake
-  install(EXPORT "${PROJECT_NAME}Targets"
-    NAMESPACE <namespace>
-  )
-  ```
 
 - add_test
   ```
