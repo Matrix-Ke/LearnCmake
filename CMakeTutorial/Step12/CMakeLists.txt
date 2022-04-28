@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.15)
 project(MatrixTutorial VERSION 1.0.0)
 
 #=====================================全局变量设置=======================================
-set(CMAKE_DEBUG_POSTFIX d)
+set(CMAKE_DEBUG_POSTFIX "_d")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY  "${PROJECT_BINARY_DIR}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}")
