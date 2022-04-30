@@ -1,11 +1,12 @@
 #==========================================库目标生成=================================
-add_library(MathFunctions MathFunctions.cpp)
+add_library(MathFunctions MathFunctions.cpp MathFunctions.h)
 set_property(TARGET MathFunctions PROPERTY VERSION "1.0.0") # 将版本编号添加到MathFunctions库中
 set_property(TARGET MathFunctions PROPERTY SOVERSION "1")
 # interface 含义： 暴露给外部需要使用这个库以这个头文件，但是该库cpp自身是不需要的额外inlcude的
 target_include_directories(MathFunctions
                             INTERFACE 
-                            # ${CMAKE_CURRENT_SOURCE_DIR}  我也不知道为啥要改成这样，但是就是改成这样才能运行cmake。
+                            # ${CMAKE_CURRENT_SOURCE_DIR}  #如果是需要导出dll程序则必须要使用BUILD_INTERFACE来进行路径判断，不能直接使用绝对路径
+                            # 这个使用了生成器表达式，其他项目引入包的时候就可以同时引入头文件包含路径
                             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                             $<INSTALL_INTERFACE:include>
                            )
@@ -14,8 +15,21 @@ target_include_directories(MathFunctions
 #==========================================生成器表达式 Debug===================================== 
 file(GENERATE OUTPUT "./generator_test.txt" CONTENT "$<IF:0,${CMAKE_CURRENT_BINARY_DIR}, ${CMAKE_CURRENT_SOURCE_DIR}>\n")
 
+#文件分组
+FILE(GLOB HeaderFiles ./*.h)  #GLOB 获取./include/目录下的*.h 储存在变量HEAD_RIGEL_EDITOR中
+FILE(GLOB SourceFiles ./*.cpp)#GLOB 递归获取./include/目录和子目录下的*.cpp 储存在变量HEAD_RIGEL_EDITOR中
+# source_group("Header Files" FILES ${HeaderFiles})
+# source_group("Source Files" FILES ${SourceFiles})
+source_group("Header Files" FILES MathFunctions.h)
+source_group("Source Files" FILES  MathFunctions.cpp)
 
-#对库目标的依赖库，宏定义，库属性进行设置
+
+#================================表达式生成器配置不同编译选项=====================================
+# define the symbol stating we are using the declspec(dllexport) when building on windows
+# target_compile_definitions(MathFunctions PRIVATE "EXPORTING_MYMATH")
+target_compile_definitions(MathFunctions PRIVATE $<$<CONFIG:Debug>:_DUBGU _TEST>)
+
+#================================对库目标的依赖库，宏定义，库属性进行设置============================
 target_link_libraries(MathFunctions PUBLIC tutorial_compiler_flags)
 option(USE_MYMATH "use tutorial provide math function" ON)
 if(USE_MYMATH)
@@ -44,8 +58,7 @@ if(USE_MYMATH)
     message(STATUS BUILD_SHARED_LIBS = ${BUILD_SHARED_LIBS})
     target_link_libraries(MathFunctions PRIVATE SqrtLibrary)
 endif()
-# define the symbol stating we are using the declspec(dllexport) when building on windows
-target_compile_definitions(MathFunctions PRIVATE "EXPORTING_MYMATH")
+
 
 
 

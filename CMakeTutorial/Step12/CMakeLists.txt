@@ -20,7 +20,6 @@ target_compile_options(tutorial_compiler_flags INTERFACE
 
 
 
-
 #=============================================config文件生成=================================
 #默认config结果保存到build文件夹中，默认TutorialConfig.h将生成到PROJECT_BINARY_DIR文件夹中
 message(STATUS configPath= ${PROJECT_BINARY_DIR})

@@ -1,5 +1,5 @@
 
-#if defined(EXPORTING_MYMATH)
+#if defined(MathFunctions_EXPORTS)
 #    define DECLSPEC __declspec(dllexport)
 #else
 #    define DECLSPEC __declspec(dllimport)
