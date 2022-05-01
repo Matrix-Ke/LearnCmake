@@ -60,6 +60,7 @@ install(TARGETS  ${installable_libs}
     EXPORT  MathFunctionsTargets
     RUNTIME DESTINATION  Bin
     LIBRARY DESTINATION  Lib
+    ARCHIVE DESTINATION  Lib
 )
 install(FILES MathFunctions.h  DESTINATION  include)
 install(EXPORT MathFunctionsTargets 
