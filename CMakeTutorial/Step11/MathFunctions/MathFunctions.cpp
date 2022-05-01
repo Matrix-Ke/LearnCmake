@@ -1,4 +1,4 @@
-
+﻿
 #include "MathFunctions.h"
 
 #include <cmath>
@@ -9,7 +9,7 @@
 
 namespace mathfunctions
 {
-	double sqrt(double x)
+	double DECLSPEC sqrt(double x)
 	{
 #ifdef USE_MYMATH
 		return detail::mysqrt(x);

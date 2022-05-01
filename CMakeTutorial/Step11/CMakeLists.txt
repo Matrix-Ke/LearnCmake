@@ -41,40 +41,6 @@ target_link_libraries(MatrixTutorial PUBLIC
 )
 
 
-#=================================================安装程序================================================
-# 默认生成到PROJECT_BINARY_DIR文件夹中, 也可以指定prefix 类如： 
-# cmake --install . --prefix "/home/myuser/installdir"
-# install(TARGETS MatrixTutorial  DESTINATION Bin) # 此install主要是单纯install不进行导出信息
-# install(FILES "${PROJECT_BINARY_DIR}/TutorialConfig.h" DESTINATION include)
-# install(EXPORT MathFunctionsTargets   
-#   FILE MathFunctionsTargets.cmake  DESTINATION lib/cmake/MathFunctions
-#   # NAMESPACE myLib:: // 可以加上namespace
-# )
-# install(EXPORT MatrixTutorialTargets  
-#   FILE MatrixTutorialTargets.cmake  DESTINATION lib/cmake/MatrixTutorial
-#   # NAMESPACE myLib:: // 可以加上namespace
-# )
-# include(CMakePackageConfigHelpers)
-# # generate the config file that is includes the exports
-# configure_package_config_file(${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
-#   "${CMAKE_CURRENT_BINARY_DIR}/MathFunctionsConfig.cmake"
-#   INSTALL_DESTINATION "lib/cmake/example"
-#   NO_SET_AND_CHECK_MACRO
-#   NO_CHECK_REQUIRED_COMPONENTS_MACRO
-# )
-
-# write_basic_package_version_file(
-#   "${CMAKE_CURRENT_BINARY_DIR}/MathFunctionsConfigVersion.cmake"
-#   VERSION "${Tutorial_VERSION_MAJOR}.${Tutorial_VERSION_MINOR}"
-#   COMPATIBILITY AnyNewerVersion
-# )
-# #Finally, set both generated files to be installed: （需要将生成的config.cmake和ConfigVersion.cmake 文件install到相关位置）
-# install(FILES
-#     ${CMAKE_CURRENT_BINARY_DIR}/MathFunctionsConfig.cmake
-#     ${CMAKE_CURRENT_BINARY_DIR}/MathFunctionsConfigVersion.cmake
-#     DESTINATION lib/cmake/MathFunctions
-# )
-
 
 
 # ========================================CPack用于打包=============================================
@@ -90,12 +56,12 @@ include(CPack)
 
 
 
-#===============================================导出编译目录=========================================
-#（这种方式不需要第三方库作为子文件夹放在使用者的项目中，它只需要导出编译目录，然后将 target 导出到 $HOME/.cmake/packages 供使用）
-set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
-export(EXPORT MathFunctionsTargets
-      FILE "${CMAKE_CURRENT_BINARY_DIR}/MathFunctionsTargets.cmake"
-)
+# #===============================================导出编译目录=========================================
+# #（这种方式不需要第三方库作为子文件夹放在使用者的项目中，它只需要导出编译目录，然后将 target 导出到 $HOME/.cmake/packages 供使用）
+# set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
+# export(EXPORT MathFunctionsTargets
+#       FILE "${CMAKE_CURRENT_BINARY_DIR}/MathFunctionsTargets.cmake"
+# )
 
 
 
