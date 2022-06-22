@@ -41,6 +41,7 @@ bld/
 !*.conf
 !*.in
 !*.cmake
+!*.md
 
 !*.gitignore
 !*.gitattributes
