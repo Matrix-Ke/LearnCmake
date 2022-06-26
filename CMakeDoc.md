@@ -518,7 +518,7 @@ eg: add_custom_command(
   
 - export()
   - export() Export targets from the build tree for use by outside projects(从构建树导出目标提供给外部工程使用)，，其实就是为了支持find_package(), 
-  - find_package() 需要包的mylibconfig.cmake以及版本查找mylibconfigVersion.cmake文件
+  - find_package() 需要包的mylibconfig.cmake以及版本查找mylibconfigVersion.cmake文件; 或者是去寻找 *Findmylib.cmake* 文件。
 
 - package
 - `<namespace>` 
