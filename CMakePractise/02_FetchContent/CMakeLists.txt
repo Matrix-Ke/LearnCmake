@@ -22,7 +22,7 @@ target_include_directories(CmakeTutorial PRIVATE include)
 target_link_libraries(CmakeTutorial PRIVATE spdlog)
 
 
-add_subdirectory(_deps)
+# add_subdirectory(_deps)
 
 
 
