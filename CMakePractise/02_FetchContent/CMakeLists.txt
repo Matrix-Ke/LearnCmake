@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.15)
 project(MatrixTutorial VERSION 1.0.0)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+include(FetchContent)
 
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/Bin) #设置可执行文件的输出目录，目录后面扩展一层<Config>
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/Bin) #库文件的输出目录
