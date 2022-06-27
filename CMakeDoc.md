@@ -144,6 +144,7 @@ PrintValue(${num})
 ```
 
 - [cmake_parse_arguments](https://cmake.org/cmake/help/v3.16/command/cmake_parse_arguments.html) 
+* [参考](https://blog.csdn.net/HandsomeHong/article/details/124062017)
 
 ```cmake
 cmake_parse_arguments("ARG" # prefix
