@@ -15,7 +15,7 @@ include(CMake/spdlog.cmake)
 add_executable(CmakeTutorial  tutorial.cpp)
 target_link_directories(CmakeTutorial   PRIVATE lib)
 target_include_directories(CmakeTutorial PRIVATE include)
-target_link_libraries(CmakeTutorial  PRIVATE  MathFunctions.lib)
+# target_link_libraries(CmakeTutorial  PRIVATE  MathFunctions.lib)
 
 
 target_link_libraries(CmakeTutorial PRIVATE spdlog)
