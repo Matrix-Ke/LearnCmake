@@ -15,13 +15,11 @@ endif()
 
 # 添加第三方依赖包
 include(FetchContent)
-# set(SPDLOG_GIT_TAG v1.4.1) # 指定版本
-set(imgui_GIT_URL git@github.com:ocornut/imgui.git) # 指定git仓库地址
 Fetchcontent_declare(
     	spdlog	#库名字
-        GIT_REPOSITORY h git@github.com:gabime/spdlog.git	# 仓库地址
+        GIT_REPOSITORY  git@github.com:gabime/spdlog.git	# 仓库地址
         # GIT_TAG v1.x # 库版本
-        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/spdlog # 指定库下载地址
+        SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/_deps/spdlog # 指定库下载地址
 				    )
 FetchContent_MakeAvailable(spdlog)
 
