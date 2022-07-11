@@ -1,5 +1,6 @@
 # 基础知识
-
+## cmake学习参考资料：
+*  [cmake使用教程](https://juejin.cn/post/6844903557183832078): 优秀的中文教程，语言简洁明了，比cmake官方文档好读很多。
 ## cmake使用方式
 * 当使用者将你的库作为第三方库来使用的时候，CMAKE_SOURCE_DIR 以及 CMAKE_BINARY_DIR 就会变成使用者所在项目的变量了。那么，在你的库中，CMake 获取的 CMAKE_SOURCE_DIR 就会是 project-root，而不是你可能想要的 project-root/extern/your-lib-root CMAKE_BINARY_DIR 同理。因此，正确的做法是使用 PROJECT_SOURCE_DIR 以及 PROJECT_BINARY_DIR，他们的获取是 CMake 根据遇到的最近的 project() 命令来决定的。
 ## CMake理解
@@ -59,6 +60,10 @@ set(<variable-name> <value>... CACHE <type> <docstring> [FORCE])
   unset(<variable> [CACHE | PARENT_SCOPE])
   ```
   - 
+- mark_as_advanced : 将缓存的变量标记为高级变量。其中，高级变量指的是那些在CMake GUI中，只有当“显示高级选项”被打开时才会被显示的变量。如果CLEAR是第一个选项，参数中的高级变量将变回非高级变量。如果FORCE是第一个选项，参数中的变量会被提升为高级变量。如果两者都未出现，新的变量会被标记为高级变量；如果这个变量已经是高级/非高级状态的话，它将会维持原状
+```cmake
+mark_as_advanced([CLEAR|FORCE] VAR VAR2 VAR...)
+```
 
 ### 类型
 
@@ -260,23 +265,30 @@ list(FILTER <list>
 
 ### target
 
-- add: [add_executable](https://cmake.org/cmake/help/v3.16/command/add_executable.html), [add_library](https://cmake.org/cmake/help/v3.16/command/add_library.html) 
+- add: [add_executable](https://cmake.org/cmake/help/v3.16/command/add_executable.html), 
+- [add_library](https://cmake.org/cmake/help/v3.16/command/add_library.html) 
 
-```cmake
-# 1. add target
-  # 1.1 exe
+
+1. add target
+  * exe
   add_executable(<name> [<source>...])
 
-  # 1.2 lib/dll
-    # 1.2.1 normal
+  * lib/dll
+    * normal模式
     add_library(<name> STATIC|SHARED [<source>...])
-    # 1.2.2 interface : e.g. pure head files
+    * interface模式 : e.g. pure head files
     add_library(<name> INTERFACE)
+    * imported library模式： 直接导入已经生成的库，GLOBAL 设置全局可见，Imported Library几个重要属性：
+      - imported_location: 标明library在磁盘上的位置。用更具体的IMPORTED_LOCATION_<CONFIG>的标注
+      - IMPORTED_OBJECTS：标明对象library在硬盘上的位置
+      - PUBLIC_HEADER：如果install这个library的话
+    add_library(<name> <SHARED|STATIC|MODULE|OBJECT|UNKNOWN> IMPORTED
+            [GLOBAL])
 
 # 2. alias
 add_library(<alias> ALIAS <target>)
 # <alias> 可以用命名空间 <namespace>::<id>，如 Ubpa::XXX
-```
+
 
 - source: 
 
@@ -486,7 +498,7 @@ eg: add_custom_command(
     - `STATUS <variable>`：状态为两个值的 list，前者为 0 时表示无错
     - `EXPECTED_HASH <HASH>=<value>`：哈希值
 
-### [CMake系列安装，打包，导出](blog.xizhibei.me/2020/04/20/cmake-5-install-package-and-export/)
+### [CMake系列安装，打包，导出](https://blog.xizhibei.me/2020/04/20/cmake-5-install-package-and-export/)
 * 使用第三方库的三种方式：
   1. 安装子文件夹(和工程一起编译，调试)
   2. 安装编译产物
@@ -582,7 +594,7 @@ eg: add_custom_command(
   - cmake中option起到编译开关的作用，CMakeLists.txt中option以前的语句，变量按未定义处理，option之后的语句，变量才被定义。另外，注意，option命令定义的变量不影响c或c++源码中#ifdef或者#ifndef逻辑判断，具体见案例代码。
 
 
-- config
+- config : 
   ```cmake
   include(CMakePackageConfigHelpers)
   
@@ -605,7 +617,12 @@ eg: add_custom_command(
           DESTINATION “${PROJECT_NAME}/cmake”
   )
   ```
-
+- configure_file: 复制文件到另外一个地方并将源文件中 ${var} 或 @Var@ 中的值替换为变量当前值，如何该变量未定义，则为空字符串
+  ```cmake
+  configure_file(<input> <output>
+               [COPYONLY] [ESCAPE_QUOTES] [@ONLY]
+               [NEWLINE_STYLE [UNIX|DOS|WIN32|LF|CRLF] ])
+  ```
 # 配合 VS
 
 - cmake -G "Visual Studio 16 2019" -A x64 -S ./ -B ./build
